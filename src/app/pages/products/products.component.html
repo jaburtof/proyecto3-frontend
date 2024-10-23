@@ -1,0 +1,41 @@
+
+@defer {
+  <div class="row p-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Products</h2>
+        <button (click)="modalService.displayModal('md', addProductsModal)" type="button" class="btn btn-primary"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    <div class="col-12">
+      <app-products-list
+        (callModalAction)="callEdition($event)"
+        (callDeleteAction)="productsService.delete($event)"
+        [products]="productsService.products$()"
+      />
+    </div>
+    @if(productsService.products$().length) {
+      <app-pagination
+        [service]="productsService"
+        [customCall]="true"
+        (callCustomPaginationMethod)="authService.isSuperAdmin() ? productsService.getAll(): productsService.getAllByUser()"
+      />
+    }
+  </div>
+} @loading (minimum 1.5s) {
+  <app-loader/>
+}
+
+<ng-template #addCategoriesModal>
+  <app-modal
+    [hideFooter]="true"
+  >
+    <div>
+      <app-products-form
+        [productForm]="productForm"
+        (callSaveMethod)="saveProduct($event)"
+        (callUpdateMethod)="updateProduct($event)"
+      />
+    </div>
+  </app-modal>
+</ng-template>
